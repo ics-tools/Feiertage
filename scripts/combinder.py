@@ -16,12 +16,10 @@ def parse_filename(filename):
     year = parts[1].split(".")[0]
     return federal_state, year
 
-def generate_empty_calender(name, refresh_interval):
+def generate_empty_calender(name):
     c = Calendar(creator="ics.tools Combinder v1.0")
     c.extra.append(ContentLine(name='NAME', value=name))
     c.extra.append(ContentLine(name='X-WR-CALNAME', value=name))
-    c.extra.append(ContentLine(name='REFRESH-INTERVAL', value="VALUE=DURATION:" + refresh_interval))
-    c.extra.append(ContentLine(name='X-PUBLISHED-TTL', value="VALUE=DURATION:" + refresh_interval))
     c.extra.append(ContentLine(name='METHOD', value="PUBLISH"))
     return c
 
@@ -35,7 +33,7 @@ for file in files:
         continue
     federal_state, year = parse_filename(file)
     if not federal_state in states_map:
-        states_map[federal_state] = generate_empty_calender(re.sub("(^|[-])\s*([a-zA-Z])", lambda p: p.group(0).upper(), federal_state) + " Feiertage", "P1W")
+        states_map[federal_state] = generate_empty_calender(re.sub("(^|[-])\s*([a-zA-Z])", lambda p: p.group(0).upper(), federal_state) + " Feiertage")
     with open(input_dir + "/" + file, "r") as file1:
         l = file1.read()
     calendar = Calendar(l)
